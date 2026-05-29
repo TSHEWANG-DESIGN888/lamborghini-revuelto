@@ -158,8 +158,8 @@ export default function RevueltoExperience({
         </div>
       </motion.div>
 
-      {/* Persistent HUD Elements */}
-      <div className="fixed top-32 left-4 md:left-12 opacity-50 flex flex-col gap-2">
+      {/* Persistent HUD Elements - Hidden on mobile for cleaner viewports */}
+      <div className="fixed top-32 left-4 md:left-12 opacity-50 flex flex-col gap-2 hidden md:flex">
         <div className="w-1 h-1 bg-[#D4AF37]"></div>
         <div className="w-1 h-8 border-l border-[#D4AF37]"></div>
         <div className="font-mono text-[8px] text-[#D4AF37] tracking-widest rotate-90 origin-left mt-8">
@@ -167,7 +167,7 @@ export default function RevueltoExperience({
         </div>
       </div>
       
-      <div className="fixed bottom-12 right-4 md:right-12 text-right">
+      <div className="fixed bottom-12 right-4 md:right-12 text-right hidden sm:block">
         <div className="font-mono text-[9px] sm:text-[10px] text-white/30 tracking-[0.3em]">
           DATA.STREAM_ACTIVE
         </div>

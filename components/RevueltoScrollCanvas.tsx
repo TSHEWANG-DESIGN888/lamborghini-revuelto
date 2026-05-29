@@ -87,7 +87,14 @@ export default function RevueltoScrollCanvas({
 
     let drawWidth, drawHeight, offsetX, offsetY;
 
-    if (canvasRatio > imgRatio) {
+    if (canvasRatio < 1) {
+      // Mobile portrait layout (9:16 ratio)
+      // Limit zoom-in by making the car span a custom width multiplier and center vertically
+      drawWidth = rect.width * 1.65;
+      drawHeight = drawWidth / imgRatio;
+      offsetX = (rect.width - drawWidth) / 2;
+      offsetY = (rect.height - drawHeight) / 2;
+    } else if (canvasRatio > imgRatio) {
       // Canvas is wider than image (cover width, crop height)
       drawWidth = rect.width;
       drawHeight = rect.width / imgRatio;
