@@ -22,10 +22,12 @@ export default function RevueltoScrollCanvas({
   useEffect(() => {
     let loadedCount = 0;
     const imgArray: HTMLImageElement[] = [];
+    const isProd = process.env.NODE_ENV === 'production';
+    const basePath = isProd ? '/lamborghini-revuelto' : '';
 
     for (let i = 1; i <= totalFrames; i++) {
       const img = new Image();
-      img.src = `${imageFolderPath}/${i}.jpg`;
+      img.src = `${basePath}${imageFolderPath}/${i}.jpg`;
       img.onload = () => {
         loadedCount++;
         setImagesLoaded(loadedCount);
