@@ -3,6 +3,9 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 
+const isProd = process.env.NODE_ENV === 'production';
+const basePath = isProd ? '/lamborghini-revuelto' : '';
+
 const images = [
   {
     src: "/images/gallery/revuelto.jpeg",
@@ -78,7 +81,7 @@ export default function Gallery() {
             {/* The image */}
             <div className="absolute inset-0 transition-transform duration-1000 group-hover:scale-105">
               <Image
-                src={img.src}
+                src={`${basePath}${img.src}`}
                 alt={img.alt}
                 fill
                 className="object-cover transition-opacity duration-700 opacity-80 group-hover:opacity-100"

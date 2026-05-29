@@ -18,6 +18,8 @@ export default function RevueltoScrollCanvas({
   const [images, setImages] = useState<HTMLImageElement[]>([]);
   const [imagesLoaded, setImagesLoaded] = useState(0);
 
+  const startThreshold = Math.min(12, totalFrames);
+
   // 1. Preload all images
   useEffect(() => {
     let loadedCount = 0;
@@ -44,8 +46,26 @@ export default function RevueltoScrollCanvas({
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const img = images[frameIndex];
-    if (!img || !img.complete) return;
+    let img = images[frameIndex];
+    if (!img || !img.complete) {
+      // Find the closest loaded frame to prevent blank canvas or flashing
+      let closestIndex = -1;
+      let minDiff = Infinity;
+      for (let j = 0; j < images.length; j++) {
+        if (images[j] && images[j].complete) {
+          const diff = Math.abs(j - frameIndex);
+          if (diff < minDiff) {
+            minDiff = diff;
+            closestIndex = j;
+          }
+        }
+      }
+      if (closestIndex !== -1) {
+        img = images[closestIndex];
+      } else {
+        return; // No images loaded at all yet
+      }
+    }
 
     // Handle High-DPI (Retina) Displays
     const dpr = window.devicePixelRatio || 1;
@@ -116,19 +136,19 @@ export default function RevueltoScrollCanvas({
   return (
     <div className="absolute inset-0 w-full h-full bg-black z-0">
       {/* Loading Overlay */}
-      {imagesLoaded < totalFrames && (
+      {imagesLoaded < startThreshold && (
         <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-[#1a1a1a]">
           <div className="font-heading text-[#D4AF37] tracking-[0.3em] mb-4 text-sm pulse-ring">
-            INITIALIZING SEQUENCE
+            INITIALIZING EXPERIENCE
           </div>
           <div className="w-64 h-1 bg-white/10 relative overflow-hidden">
             <div
               className="absolute top-0 left-0 h-full bg-[#D4AF37] transition-all duration-100 ease-linear"
-              style={{ width: `${(imagesLoaded / totalFrames) * 100}%` }}
+              style={{ width: `${(imagesLoaded / startThreshold) * 100}%` }}
             ></div>
           </div>
           <div className="font-mono text-white/50 text-xs mt-2">
-            {Math.round((imagesLoaded / totalFrames) * 100)}%
+            {Math.min(100, Math.round((imagesLoaded / startThreshold) * 100))}%
           </div>
         </div>
       )}
