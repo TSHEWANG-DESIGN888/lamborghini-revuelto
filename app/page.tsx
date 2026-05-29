@@ -1,65 +1,120 @@
-import Image from "next/image";
+"use client";
+
+import { useRef } from "react";
+import { useScroll, motion } from "framer-motion";
+import Navbar from "@/components/Navbar";
+import RevueltoScrollCanvas from "@/components/RevueltoScrollCanvas";
+import RevueltoExperience from "@/components/RevueltoExperience";
+import Gallery from "@/components/Gallery";
+import Marquee from "@/components/Marquee";
 
 export default function Home() {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // The Master Scroll Logic
+  // We track the scroll progress of the container which is 600vh tall.
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"],
+  });
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main className="bg-[#1a1a1a] min-h-[100dvh] selection:bg-[#D4AF37]/30 selection:text-[#FFD700]">
+      <Navbar />
+
+      {/* ── SCROLL SEQUENCE ── */}
+      {/* 600vh forces the user to scroll for a long time to scrub the video */}
+      <section ref={containerRef} className="h-[600vh] relative bg-black">
+        {/* Sticky container locks the view in place while scrolling */}
+        <div className="sticky top-0 h-[100dvh] w-full overflow-hidden">
+          {/* Z-Index 0: The Canvas */}
+          <RevueltoScrollCanvas
+            scrollYProgress={scrollYProgress}
+            totalFrames={240}
+            imageFolderPath="/images/lamborghini-sequence"
+          />
+
+          {/* Z-Index 10: The HUD */}
+          <RevueltoExperience scrollYProgress={scrollYProgress} />
+          
+          {/* Subtle Vignette Overlay to blend edges */}
+          <div className="absolute inset-0 z-[5] pointer-events-none bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.8)_100%)]"></div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+      </section>
+
+      {/* ── REST OF SITE ── */}
+      {/* This content naturally scrolls up AFTER the 600vh sequence is finished */}
+      <div className="relative z-20 bg-[#1a1a1a] border-t border-[#D4AF37]/20">
+        <section className="py-16 md:py-32 px-4 md:px-24 max-w-[1920px] mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-center">
+            <div>
+              <span className="font-heading text-[#D4AF37] text-sm tracking-[0.4em] block mb-4">
+                THE HYBRID REVOLUTION
+              </span>
+              <h2 className="font-heading text-4xl md:text-6xl text-white font-bold tracking-widest mb-8">
+                BEYOND LIMITS
+              </h2>
+              <p className="font-body text-xl text-white/70 leading-relaxed mb-8">
+                The Revuelto is a milestone in the history of Lamborghini. It is
+                the first High Performance Electrified Vehicle (HPEV) hybrid super
+                sports car. With its 1015 CV total power, it delivers performance
+                figures at the peak of its segment.
+              </p>
+              <button className="group relative overflow-hidden px-8 py-4 border border-[#D4AF37]/50 hover:border-[#D4AF37] transition-colors duration-500">
+                <div className="absolute inset-0 bg-[#D4AF37]/10 translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-500 ease-out"></div>
+                <span className="relative z-10 font-heading font-semibold text-xs tracking-[0.2em] text-[#D4AF37] group-hover:text-white transition-colors duration-500">
+                  DISCOVER MORE
+                </span>
+                <div className="hud-corner opacity-0 group-hover:opacity-100 transition-opacity duration-500 absolute inset-0"></div>
+              </button>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-4">
+              <div className="glass-panel p-8 hud-border flex flex-col justify-center text-center hover:bg-white/5 transition-colors duration-500">
+                <span className="font-heading text-[#D4AF37] text-3xl font-bold mb-2">V12</span>
+                <span className="font-heading text-white/50 text-xs tracking-[0.2em]">ENGINE TYPE</span>
+              </div>
+              <div className="glass-panel p-8 hud-border flex flex-col justify-center text-center hover:bg-white/5 transition-colors duration-500">
+                <span className="font-heading text-[#D4AF37] text-3xl font-bold mb-2">3</span>
+                <span className="font-heading text-white/50 text-xs tracking-[0.2em]">E-MOTORS</span>
+              </div>
+              <div className="glass-panel p-8 hud-border flex flex-col justify-center text-center hover:bg-white/5 transition-colors duration-500">
+                <span className="font-heading text-[#D4AF37] text-3xl font-bold mb-2">AWD</span>
+                <span className="font-heading text-white/50 text-xs tracking-[0.2em]">DRIVETRAIN</span>
+              </div>
+              <div className="glass-panel p-8 hud-border flex flex-col justify-center text-center hover:bg-white/5 transition-colors duration-500">
+                <span className="font-heading text-[#D4AF37] text-3xl font-bold mb-2">E-GEAR</span>
+                <span className="font-heading text-white/50 text-xs tracking-[0.2em]">TRANSMISSION</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Dynamic Image Gallery */}
+        <Gallery />
+
+        {/* Marquee Banner */}
+        <Marquee />
+
+        {/* Minimal Footer */}
+        <footer className="border-t border-white/10 py-10 px-4 md:px-24">
+          <div className="max-w-[1920px] mx-auto flex flex-col md:flex-row justify-between items-center gap-6 relative">
+            <div className="font-heading text-lg md:text-xl tracking-[0.2em] text-white">
+              LAMBORGHINI
+            </div>
+            
+            <div className="md:absolute md:left-1/2 md:-translate-x-1/2 font-heading text-[10px] tracking-[0.3em] text-[#D4AF37] text-center">
+              BUILT WITH OBSESSION
+            </div>
+
+            <div className="flex gap-8 font-heading text-[10px] tracking-widest text-white/50">
+              <span className="hover:text-[#D4AF37] cursor-pointer transition-colors">PRIVACY POLICY</span>
+              <span className="hover:text-[#D4AF37] cursor-pointer transition-colors">TERMS OF USE</span>
+              <span className="hover:text-[#D4AF37] cursor-pointer transition-colors">COOKIE POLICY</span>
+            </div>
+          </div>
+        </footer>
+      </div>
+    </main>
   );
 }

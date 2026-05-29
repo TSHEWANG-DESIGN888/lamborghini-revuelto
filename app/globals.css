@@ -1,26 +1,213 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* ═══════════════════════════════════════════════════════════════
+   LAMBORGHINI REVUELTO — Design System
+   ═══════════════════════════════════════════════════════════════ */
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* ── Color Palette ── */
+  --color-revuelto-black: #1a1a1a;
+  --color-revuelto-gold: #D4AF37;
+  --color-bright-gold: #FFD700;
+  --color-carbon-gray: #2a2a2a;
+  --color-hud-border: rgba(212, 175, 55, 0.15);
+  --color-hud-glow: rgba(212, 175, 55, 0.08);
+  --color-glass: rgba(26, 26, 26, 0.6);
+  --color-glass-border: rgba(255, 255, 255, 0.06);
+
+  /* ── Typography ── */
+  --font-heading: var(--font-orbitron);
+  --font-body: var(--font-rajdhani);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ── Global Base Styles ── */
+:root {
+  --background: #1a1a1a;
+  --foreground: #ffffff;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: auto; /* We control scroll, not the browser */
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* ── Selection Color ── */
+::selection {
+  background: rgba(212, 175, 55, 0.3);
+  color: #FFD700;
+}
+
+::-moz-selection {
+  background: rgba(212, 175, 55, 0.3);
+  color: #FFD700;
+}
+
+/* ── Scrollbar (Webkit) ── */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #D4AF37;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #FFD700;
+}
+
+/* ── Custom Utility Classes ── */
+
+/* HUD Corner Brackets */
+.hud-corner {
+  position: relative;
+}
+
+.hud-corner::before,
+.hud-corner::after {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-color: rgba(212, 175, 55, 0.4);
+  border-style: solid;
+  border-width: 0;
+}
+
+.hud-corner::before {
+  top: -1px;
+  left: -1px;
+  border-top-width: 1px;
+  border-left-width: 1px;
+}
+
+.hud-corner::after {
+  bottom: -1px;
+  right: -1px;
+  border-bottom-width: 1px;
+  border-right-width: 1px;
+}
+
+/* Gold Gradient Text */
+.text-gradient-gold {
+  background: linear-gradient(135deg, #D4AF37 0%, #FFD700 50%, #D4AF37 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Glow Effect */
+.glow-gold {
+  text-shadow: 0 0 20px rgba(212, 175, 55, 0.3),
+               0 0 40px rgba(212, 175, 55, 0.1);
+}
+
+/* Scanline Animation */
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+.scanline-effect::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(212, 175, 55, 0.02) 50%,
+    transparent 100%
+  );
+  height: 30%;
+  animation: scanline 8s linear infinite;
+  pointer-events: none;
+}
+
+/* Pulse Ring */
+@keyframes pulse-ring {
+  0% { transform: scale(0.95); opacity: 1; }
+  50% { transform: scale(1); opacity: 0.5; }
+  100% { transform: scale(0.95); opacity: 1; }
+}
+
+/* Data Stream */
+@keyframes data-stream {
+  0% { opacity: 0.3; }
+  50% { opacity: 1; }
+  100% { opacity: 0.3; }
+}
+
+/* Horizontal Line Sweep */
+@keyframes line-sweep {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.line-sweep::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(212, 175, 55, 0.6),
+    transparent
+  );
+  animation: line-sweep 4s ease-in-out infinite;
+}
+
+/* Glass Panel */
+.glass-panel {
+  background: rgba(26, 26, 26, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* HUD Border */
+.hud-border {
+  border: 1px solid rgba(212, 175, 55, 0.15);
+}
+
+/* Spec Divider */
+.spec-divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(212, 175, 55, 0.3),
+    transparent
+  );
+}
+
+/* Marquee Animation */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 30s linear infinite;
 }
